@@ -1,1 +1,1838 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FamilyGuard 2.0 · App Completo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f3f6fc;
+            --bg-card: #ffffff;
+            --text: #0b1a33;
+            --text-secondary: #6b7a93;
+            --border: #e8edf5;
+            --shadow: 0 8px 24px rgba(0, 20, 50, 0.06);
+            --primary: #4a7cf7;
+            --primary-dark: #1a2a6c;
+            --radius: 28px;
+            --transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dark-mode {
+            --bg: #0f1422;
+            --bg-card: #1a1f33;
+            --text: #f0f4fa;
+            --text-secondary: #8a9bb0;
+            --border: #2a3050;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --primary: #6a9cff;
+            --primary-dark: #3a5a9e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* ===== PÁGINA DE ENTRADA ===== */
+        #loginPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0f1a3a, #1a2a6c);
+            padding: 1.5rem;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 3rem 2.5rem;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-card .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-card .logo-area .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #1a2a6c, #2d4b9e);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(26, 42, 108, 0.3);
+        }
+
+        .login-card .logo-area h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0b1a33;
+            letter-spacing: -0.5px;
+        }
+
+        .login-card .logo-area h1 span {
+            font-weight: 300;
+            color: #4a7cf7;
+        }
+
+        .login-subtitle {
+            color: #6b7a93;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 1.2rem 0.5rem;
+            border: 2px solid #e8edf5;
+            border-radius: 20px;
+            background: #f8faff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2c3e6b;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .profile-btn i {
+            font-size: 2rem;
+            color: #6b7a93;
+            transition: 0.3s;
+        }
+
+        .profile-btn.active {
+            border-color: #4a7cf7;
+            background: #eef4ff;
+            box-shadow: 0 0 0 4px rgba(74, 124, 247, 0.12);
+        }
+
+        .profile-btn.active i {
+            color: #4a7cf7;
+        }
+
+        .btn-entrar {
+            background: linear-gradient(135deg, #1a2a6c, #2d4b9e);
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 8px 28px rgba(26, 42, 108, 0.3);
+        }
+
+        .btn-entrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(26, 42, 108, 0.4);
+        }
+
+        .login-dica {
+            font-size: 0.8rem;
+            color: #8a9bb0;
+            margin-top: 1rem;
+        }
+
+        /* ===== APP ===== */
+        #app {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg);
+            transition: background var(--transition);
+        }
+
+        #app.visible {
+            display: flex;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            background: var(--bg-card);
+            padding: 0 2rem;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 0 var(--border), 0 4px 16px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background var(--transition);
+        }
+
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .app-header .logo .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1a2a6c, #2d4b9e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .app-header .logo span {
+            font-weight: 300;
+            color: var(--primary);
+        }
+
+        .app-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .app-header .user-info .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .app-header .user-info .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f9d976, #f39c12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e2a41;
+            border: 2px solid var(--border);
+        }
+
+        .app-header .user-info .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .app-header .user-info .header-actions button {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .app-header .user-info .header-actions button:hover {
+            background: var(--bg);
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        /* ===== NAVEGAÇÃO POR ABAS ===== */
+        .tab-nav {
+            display: flex;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+            position: sticky;
+            top: 72px;
+            z-index: 99;
+            transition: background var(--transition);
+        }
+
+        .tab-nav button {
+            border: none;
+            background: transparent;
+            padding: 0.9rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tab-nav button i {
+            font-size: 1rem;
+            opacity: 0.6;
+            transition: 0.25s;
+        }
+
+        .tab-nav button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-nav button.active i {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .tab-nav button .badge {
+            background: #e74c3c;
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+        }
+
+        /* ===== CONTEÚDO DAS ABAS ===== */
+        .tab-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1360px;
+            margin: 0 auto;
+            width: 100%;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            color: var(--text);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            max-width: 400px;
+            min-width: 250px;
+        }
+
+        .toast.success {
+            border-left-color: #2ecc71;
+        }
+        .toast.warning {
+            border-left-color: #f39c12;
+        }
+        .toast.error {
+            border-left-color: #e74c3c;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast .toast-icon {
+            font-size: 1.4rem;
+        }
+        .toast .toast-content {
+            flex: 1;
+        }
+        .toast .toast-content .toast-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .toast .toast-content .toast-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* ===== CARDS ===== */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 20, 50, 0.08);
+        }
+
+        .summary-card .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .icon-blue {
+            background: linear-gradient(135deg, #4a7cf7, #6a9cff);
+        }
+        .icon-orange {
+            background: linear-gradient(135deg, #f7a84a, #f9c06a);
+        }
+        .icon-green {
+            background: linear-gradient(135deg, #2ecc71, #58d68d);
+        }
+        .icon-purple {
+            background: linear-gradient(135deg, #9b59b6, #be90d4);
+        }
+
+        .summary-card .info h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--text);
+        }
+
+        .summary-card .info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ===== SEÇÃO FILHOS + ATIVIDADES ===== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: background var(--transition);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-header h2 i {
+            color: var(--primary);
+        }
+
+        .section-header .see-all {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .section-header .see-all:hover {
+            opacity: 1;
+        }
+
+        /* ===== LISTA DE FILHOS ===== */
+        .child-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .child-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.7rem 1rem;
+            background: var(--bg);
+            border-radius: 16px;
+            transition: all 0.25s;
+            border-left: 4px solid transparent;
+        }
+
+        .child-item:hover {
+            border-left-color: var(--primary);
+        }
+
+        .child-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .child-info {
+            flex: 1;
+        }
+        .child-info .name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .child-info .details {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .child-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+        }
+        .status-online {
+            color: #1d8b4b;
+            background: #e4f4ea;
+        }
+        .status-offline {
+            color: #7f8c9b;
+            background: #eef2f7;
+        }
+        .status-school {
+            color: #d4880f;
+            background: #fef4e4;
+        }
+        .dark-mode .status-online {
+            background: #1a3a2a;
+            color: #5de08a;
+        }
+        .dark-mode .status-offline {
+            background: #2a2a3a;
+            color: #aab;
+        }
+        .dark-mode .status-school {
+            background: #3a2a1a;
+            color: #f0b84a;
+        }
+
+        /* ===== ATIVIDADES ===== */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item .act-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .activity-item .act-content {
+            flex: 1;
+        }
+        .activity-item .act-content .act-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .activity-item .act-content .act-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .activity-item .act-time {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        /* ===== MAPA ===== */
+        .map-placeholder {
+            background: linear-gradient(145deg, var(--bg), var(--border));
+            border-radius: 20px;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .map-placeholder i {
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.3;
+        }
+
+        .map-placeholder .map-label {
+            font-weight: 600;
+            background: var(--bg-card);
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        .map-placeholder .pin {
+            position: absolute;
+            bottom: 30px;
+            left: 30%;
+            font-size: 2rem;
+            color: #e74c3c;
+            animation: pulse-pin 2s infinite;
+        }
+
+        .map-placeholder .pin2 {
+            left: 65%;
+            bottom: 50px;
+            animation-delay: 0.7s;
+        }
+
+        @keyframes pulse-pin {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        .map-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.8rem;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        /* ===== TEMPO DE TELA ===== */
+        .screen-time-row {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .screen-time-item {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg);
+            border-radius: 18px;
+            padding: 0.8rem 1rem;
+            text-align: center;
+        }
+
+        .screen-time-item .value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .screen-time-item .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary), #6a9cff);
+        }
+
+        /* ===== DASHBOARD DA CRIANÇA ===== */
+        .kid-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 800px) {
+            .kid-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mascot-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .mascot {
+            font-size: 6rem;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .mascot:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .mascot-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 0.2rem;
+        }
+
+        .mascot-level {
+            display: inline-block;
+            background: var(--bg);
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 0.2rem;
+        }
+
+        .mascot-name-edit {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.3rem;
+        }
+
+        .mascot-name-edit:hover {
+            background: var(--bg);
+        }
+
+        .coins-display {
+            background: #fef4e4;
+            border-radius: 40px;
+            padding: 0.4rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #d4880f;
+            margin: 0.5rem 0 1rem;
+        }
+        .dark-mode .coins-display {
+            background: #2a2a1a;
+            color: #f0b84a;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            text-align: left;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg);
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            transition: 0.25s;
+        }
+
+        .task-item:hover {
+            background: var(--border);
+        }
+
+        .task-item .task-check {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .task-item .task-check.done {
+            background: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .task-item .task-info {
+            flex: 1;
+        }
+
+        .task-item .task-info .task-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .task-item .task-info .task-reward {
+            font-size: 0.75rem;
+            color: #d4880f;
+            font-weight: 600;
+        }
+
+        .task-item .task-streak {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== LOJA ===== */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .shop-item {
+            background: var(--bg);
+            border-radius: 18px;
+            padding: 1.2rem 0.8rem;
+            text-align: center;
+            transition: all 0.25s;
+            border: 2px solid transparent;
+            cursor: default;
+        }
+
+        .shop-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(74, 124, 247, 0.08);
+        }
+
+        .shop-item .shop-icon {
+            font-size: 2.8rem;
+        }
+
+        .shop-item .shop-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-top: 0.2rem;
+        }
+
+        .shop-item .shop-price {
+            font-size: 0.8rem;
+            color: #d4880f;
+            font-weight: 700;
+        }
+
+        .shop-item .shop-btn {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.4rem;
+            transition: 0.2s;
+        }
+
+        .shop-item .shop-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+        }
+
+        .shop-item .shop-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .history-list {
+            margin-top: 1rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .price {
+            font-weight: 600;
+            color: #d4880f;
+        }
+
+        /* ===== RELATÓRIO ===== */
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .report-item {
+            background: var(--bg);
+            border-radius: 18px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .report-item .report-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .report-item .report-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FOOTER ===== */
+        .app-footer {
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+            transition: background var(--transition);
+        }
+
+        .app-footer span {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .tab-nav {
+                padding: 0 0.5rem;
+                gap: 0.2rem;
+            }
+            .tab-nav button {
+                padding: 0.7rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .tab-content {
+                padding: 1rem;
+            }
+            .app-header {
+                padding: 0 1rem;
+                height: 64px;
+            }
+            .app-header .logo {
+                font-size: 1.1rem;
+            }
+            .app-header .user-info .user-name {
+                display: none;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            .kid-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .toast-container {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+            .toast {
+                max-width: 100%;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .tab-nav button span {
+                display: none;
+            }
+            .tab-nav button i {
+                font-size: 1.2rem;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            .shop-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================================= -->
+    <!-- ========== PÁGINA DE ENTRADA ========== -->
+    <!-- ========================================================= -->
+    <div id="loginPage">
+        <div class="login-card">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                <h1>Family<span>Guard</span></h1>
+            </div>
+            <p class="login-subtitle">Monitore, incentive e cresçam juntos</p>
+
+            <div class="profile-selector">
+                <button class="profile-btn active" data-profile="parent" onclick="selectProfile('parent')">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Pai / Mãe</span>
+                </button>
+                <button class="profile-btn" data-profile="child" onclick="selectProfile('child')">
+                    <i class="fas fa-child"></i>
+                    <span>Filho(a)</span>
+                </button>
+            </div>
+
+            <button class="btn-entrar" onclick="handleEnter()">
+                <i class="fas fa-arrow-right"></i> Entrar
+            </button>
+
+            <p class="login-dica">
+                <i class="fas fa-info-circle"></i> Escolha seu perfil e clique em <strong>Entrar</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- ========== APLICATIVO ========== -->
+    <!-- ========================================================= -->
+    <div id="app">
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                Family<span>Guard</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name" id="userNameDisplay">Pai/Mãe</span>
+                <div class="avatar" id="userAvatar">P</div>
+                <div class="header-actions">
+                    <button onclick="toggleDarkMode()" title="Modo escuro">
+                        <i class="fas fa-moon" id="darkModeIcon"></i>
+                    </button>
+                    <button onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tab-nav" id="tabNav"></nav>
+
+        <div id="tabContainer"></div>
+
+        <footer class="app-footer">
+            <p>© 2026 <span>FamilyGuard 2.0</span> · Todas as funcionalidades implementadas</p>
+        </footer>
+    </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // =========================================================
+        // ========== ESTADO GLOBAL ==========
+        // =========================================================
+        let currentProfile = 'parent';
+        let loggedIn = false;
+        let darkMode = false;
+        let streakCount = 0;
+
+        const kidData = {
+            name: 'Arthur',
+            coins: 150,
+            mascotName: 'Lilica',
+            level: 3,
+            xp: 420,
+            xpNext: 500,
+            tasks: [
+                { id: 1, title: 'Arrumar a cama', reward: 10, done: false },
+                { id: 2, title: 'Escovar os dentes', reward: 5, done: true },
+                { id: 3, title: 'Fazer lição de casa', reward: 20, done: false },
+                { id: 4, title: 'Ajudar a lavar a louça', reward: 15, done: false },
+                { id: 5, title: 'Ler 20 minutos', reward: 12, done: false },
+                { id: 6, title: 'Organizar o quarto', reward: 18, done: false },
+            ],
+            shop: [
+                { id: 1, name: 'Chapéu de Sol', icon: '🧢', price: 30, owned: false },
+                { id: 2, name: 'Camiseta Azul', icon: '👕', price: 50, owned: false },
+                { id: 3, name: 'Calça Jeans', icon: '👖', price: 70, owned: false },
+                { id: 4, name: 'Tênis Branco', icon: '👟', price: 80, owned: false },
+                { id: 5, name: 'Óculos Escuros', icon: '🕶️', price: 40, owned: false },
+                { id: 6, name: 'Capa de Chuva', icon: '🧥', price: 60, owned: false },
+                { id: 7, name: 'Cachecol Fofo', icon: '🧣', price: 35, owned: false },
+                { id: 8, name: 'Luvas Coloridas', icon: '🧤', price: 25, owned: false },
+                { id: 9, name: 'Mochila Estilosa', icon: '🎒', price: 90, owned: false },
+                { id: 10, name: 'Relógio Digital', icon: '⌚', price: 55, owned: false },
+            ],
+            history: [
+                { item: 'Camiseta Azul', price: 50, date: '26/08' },
+                { item: 'Tênis Branco', price: 80, date: '25/08' },
+            ],
+            weeklyReport: {
+                tasksCompleted: 12,
+                screenTime: 18.5,
+                coinsEarned: 145,
+                streak: 7,
+            }
+        };
+
+        // =========================================================
+        // ========== FUNÇÕES DE ENTRADA ==========
+        // =========================================================
+        function selectProfile(profile) {
+            currentProfile = profile;
+            document.querySelectorAll('.profile-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.profile === profile);
+            });
+        }
+
+        function handleEnter() {
+            loggedIn = true;
+            document.getElementById('loginPage').style.display = 'none';
+            const app = document.getElementById('app');
+            app.classList.add('visible');
+            app.style.display = 'flex';
+            initializeApp(currentProfile);
+            showToast('Bem-vindo ao FamilyGuard 2.0! 🚀', 'success');
+        }
+
+        function logout() {
+            loggedIn = false;
+            document.getElementById('loginPage').style.display = 'flex';
+            const app = document.getElementById('app');
+            app.classList.remove('visible');
+            app.style.display = 'none';
+            showToast('Até logo! 👋', 'info');
+        }
+
+        // =========================================================
+        // ========== DARK MODE ==========
+        // =========================================================
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            const icon = document.getElementById('darkModeIcon');
+            icon.className = darkMode ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('darkMode', darkMode);
+            showToast(darkMode ? 'Modo escuro ativado 🌙' : 'Modo claro ativado ☀️', 'info');
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkMode = true;
+            document.body.classList.add('dark-mode');
+            document.getElementById('darkModeIcon').className = 'fas fa-sun';
+        }
+
+        // =========================================================
+        // ========== TOAST ==========
+        // =========================================================
+        function showToast(message, type = 'info', title = '') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: '✅',
+                warning: '⚠️',
+                error: '❌',
+                info: '💡'
+            };
+
+            const titles = {
+                success: 'Sucesso!',
+                warning: 'Aviso',
+                error: 'Ops!',
+                info: 'Informação'
+            };
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || '💡'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${title || titles[type] || 'Informação'}</div>
+                    <div class="toast-desc">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, 4000);
+        }
+
+        // =========================================================
+        // ========== INICIALIZAR APP ==========
+        // =========================================================
+        function initializeApp(profile) {
+            const userName = document.getElementById('userNameDisplay');
+            const avatar = document.getElementById('userAvatar');
+
+            if (profile === 'parent') {
+                userName.textContent = 'Pai / Mãe';
+                avatar.textContent = 'P';
+            } else {
+                userName.textContent = kidData.name;
+                avatar.textContent = kidData.name.charAt(0);
+            }
+
+            renderTabs(profile);
+            const firstTab = document.querySelector('.tab-nav button');
+            if (firstTab) firstTab.click();
+        }
+
+        // =========================================================
+        // ========== RENDERIZAR ABAS ==========
+        // =========================================================
+        function renderTabs(profile) {
+            const nav = document.getElementById('tabNav');
+            const container = document.getElementById('tabContainer');
+            nav.innerHTML = '';
+            container.innerHTML = '';
+
+            if (profile === 'parent') {
+                const tabs = [
+                    { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie' },
+                    { id: 'activities', label: 'Atividades', icon: 'fa-list-ul' },
+                    { id: 'location', label: 'Localização', icon: 'fa-map-marked-alt' },
+                    { id: 'screentime', label: 'Tempo de Tela', icon: 'fa-mobile-alt' },
+                    { id: 'report', label: 'Relatório', icon: 'fa-file-alt' },
+                ];
+                tabs.forEach(tab => {
+                    const btn = document.createElement('button');
+                    btn.dataset.tab = tab.id;
+                    btn.innerHTML = `<i class="fas ${tab.icon}"></i><span>${tab.label}</span>`;
+                    btn.addEventListener('click', () => switchTab(tab.id, profile));
+                    nav.appendChild(btn);
+
+                    const content = document.createElement('div');
+                    content.id = `tab-${tab.id}`;
+                    content.className = 'tab-content';
+                    content.innerHTML = getParentTabContent(tab.id);
+                    container.appendChild(content);
+                });
+            } else {
+                const tabs = [
+                    { id: 'mascot', label: 'Mascote', icon: 'fa-paw' },
+                    { id: 'tasks', label: 'Tarefas', icon: 'fa-tasks' },
+                    { id: 'shop', label: 'Loja', icon: 'fa-store' },
+                    { id: 'history', label: 'Histórico', icon: 'fa-clock' },
+                ];
+                tabs.forEach(tab => {
+                    const btn = document.createElement('button');
+                    btn.dataset.tab = tab.id;
+                    btn.innerHTML = `<i class="fas ${tab.icon}"></i><span>${tab.label}</span>`;
+                    btn.addEventListener('click', () => switchTab(tab.id, profile));
+                    nav.appendChild(btn);
+
+                    const content = document.createElement('div');
+                    content.id = `tab-${tab.id}`;
+                    content.className = 'tab-content';
+                    content.innerHTML = getKidTabContent(tab.id);
+                    container.appendChild(content);
+                });
+            }
+        }
+
+        // =========================================================
+        // ========== TROCA DE ABA ==========
+        // =========================================================
+        function switchTab(tabId, profile) {
+            document.querySelectorAll('.tab-nav button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.toggle('active', el.id === `tab-${tabId}`);
+            });
+
+            if (profile === 'child') {
+                if (tabId === 'tasks') renderTasks();
+                if (tabId === 'shop') renderShop();
+                if (tabId === 'history') renderHistory();
+                if (tabId === 'mascot') updateMascotInfo();
+            }
+        }
+
+        // =========================================================
+        // ========== TROCAR NOME DA MASCOTE ==========
+        // =========================================================
+        function changeMascotName() {
+            const newName = prompt('Digite o novo nome da sua ovelhinha:', kidData.mascotName);
+            if (newName && newName.trim() !== '') {
+                kidData.mascotName = newName.trim();
+                updateMascotInfo();
+                const mascotNameEl = document.querySelector('.mascot-name');
+                if (mascotNameEl) {
+                    mascotNameEl.textContent = kidData.mascotName;
+                }
+                showToast(`✨ Nome alterado para "${kidData.mascotName}"!`, 'success');
+            } else if (newName !== null) {
+                showToast('O nome não pode ficar vazio.', 'warning');
+            }
+        }
+
+        // =========================================================
+        // ========== CONTEÚDO DAS ABAS (PAIS) ==========
+        // =========================================================
+        function getParentTabContent(tabId) {
+            const common =
+                `
+                <div class="section-card">
+                    <div class="section-header">
+                        <h2><i class="fas fa-info-circle"></i> Visão Geral</h2>
+                    </div>
+                    <p style="color:var(--text-secondary);">Acompanhe em tempo real tudo o que seus filhos fazem no celular.</p>
+                </div>
+            `;
+
+            const dashboard = `
+                <div class="summary-grid">
+                    <div class="summary-card"><div class="icon icon-blue"><i class="fas fa-users"></i></div><div class="info"><h3>4</h3><p>Filhos conectados</p></div></div>
+                    <div class="summary-card"><div class="icon icon-orange"><i class="fas fa-exclamation-triangle"></i></div><div class="info"><h3>2</h3><p>Alertas ativos</p></div></div>
+                    <div class="summary-card"><div class="icon icon-green"><i class="fas fa-clock"></i></div><div class="info"><h3>3,2h</h3><p>Tela média / dia</p></div></div>
+                    <div class="summary-card"><div class="icon icon-purple"><i class="fas fa-map-pin"></i></div><div class="info"><h3>100%</h3><p>Localização ativa</p></div></div>
+                </div>
+                <div class="two-col">
+                    <div class="section-card">
+                        <div class="section-header"><h2><i class="fas fa-child"></i> Seus Filhos</h2></div>
+                        <div class="child-list">
+                            <div class="child-item"><div class="child-avatar" style="background:linear-gradient(135deg,#4a7cf7,#7aa3ff);">A</div><div class="child-info"><div class="name">Arthur</div><div class="details"><span>10 anos</span><span>📚 Escola</span></div></div><span class="child-status status-school">Escola</span></div>
+                            <div class="child-item"><div class="child-avatar" style="background:linear-gradient(135deg,#e67e22,#f39c12);">M</div><div class="child-info"><div class="name">Maria</div><div class="details"><span>8 anos</span><span>🏠 Casa</span></div></div><span class="child-status status-online">Online</span></div>
+                            <div class="child-item"><div class="child-avatar" style="background:linear-gradient(135deg,#27ae60,#58d68d);">L</div><div class="child-info"><div class="name">Lucas</div><div class="details"><span>13 anos</span><span>🌳 Parque</span></div></div><span class="child-status status-online">Online</span></div>
+                            <div class="child-item"><div class="child-avatar" style="background:linear-gradient(135deg,#8e44ad,#af7ac5);">S</div><div class="child-info"><div class="name">Sofia</div><div class="details"><span>6 anos</span><span>🏠 Casa</span></div></div><span class="child-status status-offline">Offline</span></div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="section-header"><h2><i class="fas fa-list-ul"></i> Últimas Atividades</h2></div>
+                        <div class="activity-list">
+                            <div class="activity-item"><div class="act-icon"><i class="fas fa-play"></i></div><div class="act-content"><div class="act-title">Arthur iniciou <strong>Matemática</strong></div><div class="act-desc">Khan Academy</div></div><div class="act-time">16:20</div></div>
+                            <div class="activity-item"><div class="act-icon"><i class="fas fa-map-marker-alt"></i></div><div class="act-content"><div class="act-title">Maria chegou em <strong>Casa</strong></div><div class="act-desc">Localização confirmada</div></div><div class="act-time">15:45</div></div>
+                            <div class="activity-item"><div class="act-icon"><i class="fas fa-gamepad"></i></div><div class="act-content"><div class="act-title">Lucas jogou <strong>Roblox</strong></div><div class="act-desc">1h 12min</div></div><div class="act-time">14:10</div></div>
+                            <div class="activity-item"><div class="act-icon"><i class="fas fa-video"></i></div><div class="act-content"><div class="act-title">Sofia assistiu <strong>desenho</strong></div><div class="act-desc">YouTube Kids · 30min</div></div><div class="act-time">12:30</div></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const location = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-map-marked-alt"></i> Localização em tempo real</h2></div>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map"></i>
+                        <span class="map-label">📍 Mapa interativo</span>
+                        <div class="pin">📍</div>
+                        <div class="pin pin2">📍</div>
+                        <div style="position:absolute; bottom:12px; right:20px; font-size:0.75rem; background:var(--bg-card); padding:0.2rem 0.8rem; border-radius:40px; border:1px solid var(--border); font-weight:600;">3 ativos</div>
+                    </div>
+                    <div class="map-footer">
+                        <span><i class="fas fa-child"></i> Arthur · Escola Municipal</span>
+                        <span><i class="fas fa-child"></i> Maria · Rua das Flores, 123</span>
+                        <span><i class="fas fa-child"></i> Lucas · Parque Central</span>
+                    </div>
+                </div>
+            `;
+
+            const screentime = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-mobile-alt"></i> Tempo de Tela (hoje)</h2><span style="font-size:0.8rem; color:var(--text-secondary); font-weight:500;">Meta: 3h</span></div>
+                    <div class="screen-time-row">
+                        <div class="screen-time-item"><div class="value">1,8h</div><div class="label">Arthur</div><div class="bar-bg"><div class="bar-fill" style="width:60%;"></div></div></div>
+                        <div class="screen-time-item"><div class="value">2,4h</div><div class="label">Maria</div><div class="bar-bg"><div class="bar-fill" style="width:80%;"></div></div></div>
+                        <div class="screen-time-item"><div class="value">3,1h</div><div class="label">Lucas</div><div class="bar-bg"><div class="bar-fill" style="width:103%; background:linear-gradient(90deg,#f39c12,#e67e22);"></div></div></div>
+                        <div class="screen-time-item"><div class="value">0,9h</div><div class="label">Sofia</div><div class="bar-bg"><div class="bar-fill" style="width:30%;"></div></div></div>
+                    </div>
+                    <div style="margin-top:1.2rem; font-size:0.8rem; color:var(--text-secondary); display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:flex-end; border-top:1px solid var(--border); padding-top:0.8rem;">
+                        <span><i class="fas fa-check-circle" style="color:#2ecc71;"></i> Limites respeitados</span>
+                        <span><i class="fas fa-exclamation-circle" style="color:#f39c12;"></i> Lucas excedeu meta</span>
+                    </div>
+                </div>
+            `;
+
+            const activities = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-list-ul"></i> Histórico completo</h2></div>
+                    <div class="activity-list">
+                        <div class="activity-item"><div class="act-icon"><i class="fas fa-play"></i></div><div class="act-content"><div class="act-title">Arthur - App: Duolingo</div><div class="act-desc">30 min de uso</div></div><div class="act-time">17:00</div></div>
+                        <div class="activity-item"><div class="act-icon"><i class="fas fa-comment"></i></div><div class="act-content"><div class="act-title">Maria - Mensagem para avó</div><div class="act-desc">WhatsApp</div></div><div class="act-time">16:30</div></div>
+                        <div class="activity-item"><div class="act-icon"><i class="fas fa-globe"></i></div><div class="act-content"><div class="act-title">Lucas - Pesquisa escolar</div><div class="act-desc">Google Chrome</div></div><div class="act-time">15:10</div></div>
+                        <div class="activity-item"><div class="act-icon"><i class="fas fa-youtube"></i></div><div class="act-content"><div class="act-title">Sofia - Vídeo educativo</div><div class="act-desc">YouTube Kids</div></div><div class="act-time">14:00</div></div>
+                        <div class="activity-item"><div class="act-icon"><i class="fas fa-gamepad"></i></div><div class="act-content"><div class="act-title">Arthur - Jogo: Minecraft</div><div class="act-desc">45 min</div></div><div class="act-time">13:20</div></div>
+                    </div>
+                </div>
+            `;
+
+            const report = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-file-alt"></i> Relatório Semanal</h2></div>
+                    <div class="report-grid">
+                        <div class="report-item"><div class="report-value">${kidData.weeklyReport.tasksCompleted}</div><div class="report-label">Tarefas concluídas</div></div>
+                        <div class="report-item"><div class="report-value">${kidData.weeklyReport.screenTime}h</div><div class="report-label">Tempo de tela</div></div>
+                        <div class="report-item"><div class="report-value">${kidData.weeklyReport.coinsEarned}</div><div class="report-label">Moedas ganhas</div></div>
+                        <div class="report-item"><div class="report-value">${kidData.weeklyReport.streak}🔥</div><div class="report-label">Dias de streak</div></div>
+                    </div>
+                    <div style="margin-top:1.5rem; padding:1rem; background:var(--bg); border-radius:16px;">
+                        <p style="font-weight:600; color:var(--text);"><i class="fas fa-star" style="color:#f39c12;"></i> Resumo da semana</p>
+                        <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.3rem;">
+                            Arthur teve uma semana produtiva! Completou ${kidData.weeklyReport.tasksCompleted} tarefas e ganhou ${kidData.weeklyReport.coinsEarned} moedas. 
+                            Continue assim! 💪
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            const map = {
+                'dashboard': dashboard,
+                'location': location,
+                'screentime': screentime,
+                'activities': activities,
+                'report': report,
+            };
+            return map[tabId] || common;
+        }
+
+        // =========================================================
+        // ========== CONTEÚDO DAS ABAS (CRIANÇA) ==========
+        // =========================================================
+        function getKidTabContent(tabId) {
+            const common = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-info-circle"></i> Bem-vindo, ${kidData.name}!</h2></div>
+                    <p style="color:var(--text-secondary);">Complete tarefas para ganhar moedas e cuidar da sua ovelhinha.</p>
+                </div>
+            `;
+
+            const mascot = `
+                <div class="kid-dashboard">
+                    <div class="mascot-card">
+                        <div class="mascot">🐑</div>
+                        <div class="mascot-name" id="mascotNameDisplay">${kidData.mascotName}</div>
+                        <div class="mascot-level">⭐ Nível ${kidData.level} · ${kidData.xp}/${kidData.xpNext} XP</div>
+                        <button class="mascot-name-edit" onclick="changeMascotName()">
+                            <i class="fas fa-pen"></i> Trocar nome
+                        </button>
+                        <div class="coins-display"><i class="fas fa-coins"></i> ${kidData.coins} moedas</div>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">Sua ovelhinha está muito feliz com você!</p>
+                        <div style="margin-top:1.2rem; background:var(--bg); padding:0.8rem; border-radius:16px;">
+                            <i class="fas fa-heart" style="color:#e74c3c;"></i> Amor: <strong>85%</strong>
+                            <div style="width:100%; height:4px; background:var(--border); border-radius:10px; margin-top:0.4rem; overflow:hidden;">
+                                <div style="width:85%; height:100%; background:linear-gradient(90deg,#e74c3c,#f1948a); border-radius:10px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top:1rem; background:var(--bg); padding:0.8rem; border-radius:16px;">
+                            <i class="fas fa-fire" style="color:#f39c12;"></i> Streak: <strong>${kidData.weeklyReport.streak} dias</strong> 🔥
+                        </div>
+                    </div>
+                    <div class="mascot-card">
+                        <h3 style="font-size:1rem; color:var(--text);"><i class="fas fa-star" style="color:#f39c12;"></i> Conquistas</h3>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
+                            <span style="background:var(--bg); padding:0.3rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--text);">🏆 ${kidData.weeklyReport.tasksCompleted} tarefas</span>
+                            <span style="background:var(--bg); padding:0.3rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--text);">👕 ${kidData.shop.filter(i=>i.owned).length} roupas</span>
+                            <span style="background:var(--bg); padding:0.3rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--text);">⭐ Nível ${kidData.level}</span>
+                            <span style="background:var(--bg); padding:0.3rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600; color:var(--text);">🔥 Streak ${kidData.weeklyReport.streak}</span>
+                        </div>
+                        <div style="margin-top:1rem; background:var(--bg); padding:1rem; border-radius:16px; text-align:left;">
+                            <p style="font-size:0.85rem; color:var(--text);"><i class="fas fa-gift" style="color:var(--primary);"></i> Próxima recompensa: Chapéu novo (30 moedas)</p>
+                        </div>
+                        <div style="margin-top:0.8rem; background:var(--bg); padding:0.8rem; border-radius:16px; text-align:left;">
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">
+                                <i class="fas fa-robot" style="color:var(--primary);"></i> 
+                                <strong>Dica:</strong> Complete tarefas diárias para evoluir sua ovelhinha!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const tasks = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-tasks"></i> Tarefas do dia</h2><span style="font-size:0.8rem; color:var(--text-secondary); font-weight:500;"><i class="fas fa-coins" style="color:#d4880f;"></i> Ganhe moedas</span></div>
+                    <div id="taskList" class="task-list"></div>
+                </div>
+            `;
+
+            const shop = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-store"></i> Loja de Roupas</h2><span style="font-size:0.85rem; font-weight:600; color:#d4880f;"><i class="fas fa-coins"></i> ${kidData.coins}</span></div>
+                    <div id="shopGrid" class="shop-grid"></div>
+                </div>
+            `;
+
+            const history = `
+                <div class="section-card">
+                    <div class="section-header"><h2><i class="fas fa-clock"></i> Histórico de compras</h2></div>
+                    <div id="historyList" class="history-list"></div>
+                </div>
+            `;
+
+            const map = {
+                'mascot': mascot,
+                'tasks': tasks,
+                'shop': shop,
+                'history': history,
+            };
+            return map[tabId] || common;
+        }
+
+        // =========================================================
+        // ========== FUNÇÕES DINÂMICAS (CRIANÇA) ==========
+        // =========================================================
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            if (!container) return;
+            container.innerHTML = '';
+            kidData.tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = 'task-item';
+                div.innerHTML = `
+                    <div class="task-check ${task.done ? 'done' : ''}" onclick="toggleTask(${task.id})">
+                        ${task.done ? '<i class="fas fa-check"></i>' : ''}
+                    </div>
+                    <div class="task-info">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-reward"><i class="fas fa-coins"></i> ${task.reward}</div>
+                    </div>
+                    ${task.done ? '<span style="color:#2ecc71; font-size:0.75rem; font-weight:600;">✓ Concluída</span>' : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleTask(id) {
+            const task = kidData.tasks.find(t => t.id === id);
+            if (!task) return;
+            if (!task.done) {
+                task.done = true;
+                kidData.coins += task.reward;
+                kidData.xp += task.reward * 2;
+                kidData.weeklyReport.tasksCompleted++;
+                kidData.weeklyReport.coinsEarned += task.reward;
+
+                if (kidData.xp >= kidData.xpNext) {
+                    kidData.level++;
+                    kidData.xpNext += 100;
+                    showToast(`🎉 Subiu para o Nível ${kidData.level}!`, 'success', 'Level Up!');
+                }
+
+                streakCount++;
+                if (streakCount > kidData.weeklyReport.streak) {
+                    kidData.weeklyReport.streak = streakCount;
+                }
+
+                kidData.history.push({
+                    item: `Tarefa: ${task.title}`,
+                    price: task.reward,
+                    date: new Date().toLocaleDateString('pt-BR')
+                });
+
+                showToast(`🎉 Tarefa concluída! Ganhou ${task.reward} moedas.`, 'success');
+                renderTasks();
+                updateMascotInfo();
+                const shopTab = document.querySelector('#tab-shop');
+                if (shopTab && shopTab.classList.contains('active')) renderShop();
+            } else {
+                showToast('Essa tarefa já foi concluída.', 'warning');
+            }
+        }
+
+        function renderShop() {
+            const container = document.getElementById('shopGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            kidData.shop.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                div.innerHTML = `
+                    <div class="shop-icon">${item.icon}</div>
+                    <div class="shop-name">${item.name}</div>
+                    <div class="shop-price"><i class="fas fa-coins"></i> ${item.price}</div>
+                    <button class="shop-btn" ${item.owned || kidData.coins < item.price ? 'disabled' : ''} onclick="buyItem(${item.id})">
+                        ${item.owned ? '✔️ Comprado' : 'Comprar'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function buyItem(id) {
+            const item = kidData.shop.find(i => i.id === id);
+            if (!item || item.owned) return;
+            if (kidData.coins < item.price) {
+                showToast('Moedas insuficientes! Complete mais tarefas.', 'warning');
+                return;
+            }
+            kidData.coins -= item.price;
+            item.owned = true;
+            kidData.history.push({ item: item.name, price: item.price, date: new Date().toLocaleDateString('pt-BR') });
+            showToast(`🎉 Você comprou ${item.name}!`, 'success');
+            renderShop();
+            updateMascotInfo();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (kidData.history.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-secondary);">Nenhuma compra ainda.</p>';
+                return;
+            }
+            kidData.history.forEach(h => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <span>${h.item}</span>
+                    <span class="price"><i class="fas fa-coins"></i> ${h.price} · ${h.date}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateMascotInfo() {
+            const coinsDisplay = document.querySelector('.coins-display');
+            if (coinsDisplay) {
+                coinsDisplay.innerHTML = `<i class="fas fa-coins"></i> ${kidData.coins} moedas`;
+            }
+            const shopCoins = document.querySelector('#tab-shop .section-header span');
+            if (shopCoins) {
+                shopCoins.innerHTML = `<i class="fas fa-coins"></i> ${kidData.coins}`;
+            }
+            const mascotNameEl = document.getElementById('mascotNameDisplay');
+            if (mascotNameEl) {
+                mascotNameEl.textContent = kidData.mascotName;
+            }
+            const levelEl = document.querySelector('.mascot-level');
+            if (levelEl) {
+                levelEl.textContent = `⭐ Nível ${kidData.level} · ${kidData.xp}/${kidData.xpNext} XP`;
+            }
+        }
+
+        // =========================================================
+        // ========== INICIALIZAÇÃO ==========
+        // =========================================================
+        console.log('🚀 FamilyGuard 2.0 carregado com todas as funcionalidades!');
+        console.log('💡 Dica: Experimente completar tarefas para ver a evolução da mascote!');
+        console.log('📊 Funcionalidades implementadas: Dark Mode, Níveis, Streak, Relatório, Loja expandida, Toasts');
+    </script>
+
+</body>
+</html>
